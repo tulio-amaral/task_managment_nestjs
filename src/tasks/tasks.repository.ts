@@ -1,3 +1,4 @@
+import { User } from 'src/auth/user.entity';
 import { Brackets, EntityRepository, Repository } from 'typeorm';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { GetTasksFilterDTO } from './dto/get-tasks-filter.dto';
@@ -6,13 +7,14 @@ import { Task } from './task.entity';
 
 @EntityRepository(Task)
 export class TasksRepository extends Repository<Task> {
-  async createTask(createTask: CreateTaskDTO): Promise<Task> {
+  async createTask(createTask: CreateTaskDTO, user: User): Promise<Task> {
     const { title, description } = createTask;
 
     const task = this.create({
       title,
       description,
       status: TaskStatus.OPEN,
+      user,
     });
 
     await this.save(task);
@@ -20,10 +22,11 @@ export class TasksRepository extends Repository<Task> {
     return task;
   }
 
-  async getTasks(filter: GetTasksFilterDTO): Promise<Task[]> {
+  async getTasks(filter: GetTasksFilterDTO, user: User): Promise<Task[]> {
     const { search, status } = filter;
 
     const query = this.createQueryBuilder('task');
+    query.where({ user });
 
     if (status) {
       query.andWhere('task.status = :status', { status });
