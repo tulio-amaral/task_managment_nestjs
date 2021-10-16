@@ -8,11 +8,11 @@ import { TransformInterceptor } from './transform.interceptor';
 async function bootstrap() {
   const logger = new Logger();
   const app = await NestFactory.create(AppModule);
-  const PORT = 3333;
+  app.enableCors();
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
-  await app.listen(PORT);
+  await app.listen(process.env.PORT);
 
   logger.log(`Application listening on port ${process.env.PORT}`);
 }
