@@ -1,4 +1,4 @@
-import { User } from 'src/auth/user.entity';
+import { User } from '../auth/user.entity';
 import { Brackets, EntityRepository, Repository } from 'typeorm';
 import { InternalServerErrorException, Logger } from '@nestjs/common';
 
